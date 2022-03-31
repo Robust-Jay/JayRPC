@@ -10,6 +10,7 @@ namespace JayRPC
     public:
         static void Init(int argc, char *argv[]);
         static JayRpcApplication &GetInstance(); // 单例模式
+        static JayRpcConfig &GetConfig();
 
     private:
         static JayRpcConfig __config;

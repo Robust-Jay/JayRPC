@@ -42,15 +42,20 @@ namespace JayRPC
         // 开始加载配置文件: jayprcserverip jayrpcserverport zookeeperip zookeeperport
         __config.LoadConfigFile(config_file.c_str());
 
-        std::cout << "jayrpcserverip: " << __config.Load("jayrpcserverip") << std::endl;
-        std::cout << "jayrpcserverport: " << __config.Load("jayrpcserverport") << std::endl;
-        std::cout << "zookeeperip: " << __config.Load("zookeeperip") << std::endl;
-        std::cout << "zookeeperport: " << __config.Load("zookeeperport") << std::endl;
+        // std::cout << "jayrpcserverip: " << __config.Load("jayrpcserverip") << std::endl;
+        // std::cout << "jayrpcserverport: " << __config.Load("jayrpcserverport") << std::endl;
+        // std::cout << "zookeeperip: " << __config.Load("zookeeperip") << std::endl;
+        // std::cout << "zookeeperport: " << __config.Load("zookeeperport") << std::endl;
     }
 
     JayRpcApplication &JayRpcApplication::GetInstance()
     {
         static JayRpcApplication app;
         return app;
+    }
+
+    JayRpcConfig &JayRpcApplication::GetConfig()
+    {
+        return __config;
     }
 } // namespace JayRPC
