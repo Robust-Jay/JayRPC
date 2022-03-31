@@ -3,14 +3,13 @@
 #include <google/protobuf/service.h>
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/message.h>
-#include <string>
-#include "rpcheader.pb.h"
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <errno.h>
-#include <jayrpcapplication.h>
 #include <unistd.h>
+#include "jayrpcapplication.h"
+#include "rpcheader.pb.h"
 
 namespace JayRPC
 {

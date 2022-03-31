@@ -1,8 +1,8 @@
 #include <iostream>
 #include "jayrpcapplication.h"
 #include "jayrpcchannel.h"
+#include "jayrpccontroller.h"
 #include "friend.pb.h"
-#include <string>
 
 using namespace JayRPC;
 
@@ -16,21 +16,29 @@ int main(int argc, char *argv[])
     fixbug::GetFriendListRequest request; // rpc方法的请求
     request.set_userid(1000);
     fixbug::GetFriendListResponse response; // rpc方法的响应
-    stub.GetFriendList(nullptr, &request, &response, nullptr); // JayRpcChannel->CallMethod 集中来做所有rpc方法调用的参数序列化和网络发送
+    JayRpcController controller;
+    stub.GetFriendList(&controller, &request, &response, nullptr); // JayRpcChannel->CallMethod 集中来做所有rpc方法调用的参数序列化和网络发送
     // 一次rpc调用完成，读响应的结果
-    if (0 == response.result().errcode())
+    if (controller.Failed())
     {
-        std::cout << "rpc login response success!" << std::endl;
-        int size = response.friends_size();
-        for (int i = 0; i < size; i++)
-        {
-            std::cout << "index: " << i + 1 << " name: " << response.friends(i) << std::endl;
-        }
-
+        std::cout << controller.ErrorText() << std::endl;
     }
     else
     {
-        std::cout << "rpc login response error: " << response.result().errmsg() << std::endl;
+        if (0 == response.result().errcode())
+        {
+            std::cout << "rpc login response success!" << std::endl;
+            int size = response.friends_size();
+            for (int i = 0; i < size; i++)
+            {
+                std::cout << "index: " << i + 1 << " name: " << response.friends(i) << std::endl;
+            }
+
+        }
+        else
+        {
+            std::cout << "rpc login response error: " << response.result().errmsg() << std::endl;
+        }
     }
     return 0;
 }

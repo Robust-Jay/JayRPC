@@ -20,7 +20,7 @@ namespace JayRPC
         }
         else
         {
-            std::cout << "serialize request error!" << std::endl;
+            controller->SetFailed("serialize request error!");
             return;
         }
 
@@ -38,7 +38,8 @@ namespace JayRPC
         }
         else
         {
-            std::cout << "serialize rpc header error!" << std::endl;
+            controller->SetFailed("serialize rpc header error!");
+            return;
         }
 
         // 组织待发送的rpc请求字符串
@@ -60,8 +61,9 @@ namespace JayRPC
         int clientfd = socket(AF_INET, SOCK_STREAM, 0);
         if (-1 == clientfd)
         {
-            std::cout << "create socket error! errno: " << errno << std::endl;
-            exit(EXIT_FAILURE);
+            std::string errtxt = "create socket error! errno: " + errno;
+            controller->SetFailed(errtxt);
+            return;
         }
 
         // 读取配置文件jayrpcserver的信息
@@ -76,7 +78,8 @@ namespace JayRPC
         // 连接rpc服务节点
         if (-1 == connect(clientfd, (struct sockaddr *)&server_addr, sizeof(server_addr)))
         {
-            std::cout << "connect error! errno: " << errno << std::endl;
+            std::string errtxt = "connect error! errno: " + errno;
+            controller->SetFailed(errtxt);
             close(clientfd);
             return;
         }
@@ -84,7 +87,8 @@ namespace JayRPC
         // 发送rpc请求
         if (-1 == send(clientfd, send_rpc_str.c_str(), send_rpc_str.length(), 0))
         {
-            std::cout << "send error! errno: " << errno << std::endl;
+            std::string errtxt = "send error! errno: " + errno;
+            controller->SetFailed(errtxt);
             close(clientfd);
             return;
         }
@@ -94,7 +98,8 @@ namespace JayRPC
         int recv_size = 0;
         if (-1 == (recv_size = recv(clientfd, recv_buf, 1024, 0)))
         {
-            std::cout << "recv error! errno: " << errno << std::endl;
+            std::string errtxt = "recv error! errno: " + errno;
+            controller->SetFailed(errtxt);
             close(clientfd);
             return;
         }
@@ -103,7 +108,8 @@ namespace JayRPC
         std::string response_str(recv_buf, 0, recv_size);
         if (!response->ParseFromString(response_str))
         {
-            std::cout << "parse error! response_str: " << response_str << std::endl;
+            std::string errtxt = "parse error! response_str: " + errno;
+            controller->SetFailed(errtxt);
             close(clientfd);
             return;
         }

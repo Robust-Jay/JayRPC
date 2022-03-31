@@ -1,6 +1,4 @@
 #include "jayrpcconfig.h"
-#include <iostream>
-#include <fstream>
 
 namespace JayRPC
 {
