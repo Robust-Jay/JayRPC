@@ -32,6 +32,24 @@ namespace JayRPC
         server.setConnectionCallback(std::bind(&JayRpcProvider::OnConnection, this, std::placeholders::_1));                                         // 绑定连接回调
         server.setMessageCallback(std::bind(&JayRpcProvider::OnMessage, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)); // 绑定读写回调
         server.setThreadNum(4);                                                                                                                      // 设置muduo的线程数量
+        
+        // 把当前rpc节点上要发布的服务全部注册到zookeeper上，让rpc client可以从zookeeper上发现服务
+        ZkClient zkCli;
+        zkCli.Start();
+        // service_name 为永久性节点，method_name为临时性节点
+        for (auto &sp : __serviceMap)
+        {
+            std::string service_path = "/" + sp.first;
+            zkCli.Create(service_path.c_str(), nullptr, 0);
+            for (auto &mp : sp.second.__methodMap)
+            {
+                std::string method_path = service_path + "/" + mp.first;
+                char method_path_data[128] = {0};
+                sprintf(method_path_data, "%s:%d", ip.c_str(), port);
+                zkCli.Create(method_path.c_str(), method_path_data, strlen(method_path_data), ZOO_EPHEMERAL);
+            }
+        }
+
         LOG_INFO("JayRpcProvider start service at ip: %s port: %d", ip.c_str(), port);
         server.start(); // 启动网络服务
         __eventLoop.loop();

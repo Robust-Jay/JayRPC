@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include "jayrpcapplication.h"
 #include "rpcheader.pb.h"
+#include "zookeeperutil.h"
 
 namespace JayRPC
 {

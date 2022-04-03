@@ -66,9 +66,28 @@ namespace JayRPC
             return;
         }
 
-        // 读取配置文件jayrpcserver的信息
-        std::string ip = JayRpcApplication::GetInstance().GetConfig().Load("jayrpcserverip");
-        uint16_t port = atoi(JayRpcApplication::GetInstance().GetConfig().Load("jayrpcserverport").c_str());
+        // // 读取配置文件jayrpcserver的信息
+        // std::string ip = JayRpcApplication::GetInstance().GetConfig().Load("jayrpcserverip");
+        // uint16_t port = atoi(JayRpcApplication::GetInstance().GetConfig().Load("jayrpcserverport").c_str());
+
+        // rpc调用方想调用service_name的method_name服务，需要查询zookeeper上该服务所在的host信息
+        ZkClient zkCli;
+        zkCli.Start();
+        std::string method_path = "/" + service_name + "/" + method_name;
+        std::string host_data = zkCli.GetData(method_path.c_str());
+        if (host_data == "")
+        {
+            controller->SetFailed(method_path + " not exist!");
+            return;
+        }
+        int idx = host_data.find(':');
+        if (idx == -1)
+        {
+            controller->SetFailed(method_path + " address is invalid!");
+            return;
+        }
+        std::string ip = host_data.substr(0, idx);
+        uint16_t port = atoi(host_data.substr(idx + 1, host_data.size() - idx).c_str());
 
         struct sockaddr_in server_addr;
         server_addr.sin_family = AF_INET;

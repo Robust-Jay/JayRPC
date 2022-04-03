@@ -11,6 +11,7 @@
 #include "jayrpcapplication.h"
 #include "rpcheader.pb.h"
 #include "logger.h"
+#include "zookeeperutil.h"
 
 namespace JayRPC
 {
