@@ -10,6 +10,7 @@
 #include <muduo/base/Timestamp.h>
 #include "jayrpcapplication.h"
 #include "rpcheader.pb.h"
+#include "logger.h"
 
 namespace JayRPC
 {

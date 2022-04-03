@@ -3,6 +3,7 @@
 #include <iostream>
 #include <unistd.h>
 #include "jayrpcconfig.h"
+#include "logger.h"
 
 namespace JayRPC
 {

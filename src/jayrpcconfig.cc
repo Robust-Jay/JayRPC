@@ -21,7 +21,7 @@ namespace JayRPC
         std::ifstream pf(configfile, std::ios::in);
         if (!pf.is_open())
         {
-            std::cout << configfile << " not exist!" << std::endl;
+            LOG_ERROR("%s not exist!", configfile);
             exit(EXIT_FAILURE);
         }
 

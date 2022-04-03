@@ -4,7 +4,7 @@ namespace JayRPC
 {
     void ShowArgsHelp()
     {
-        std::cout << "format: command -i <configfile>" << std::endl;
+        LOG_ERROR("format: command -i <configfile>");
     }
 
     JayRpcConfig JayRpcApplication::__config;

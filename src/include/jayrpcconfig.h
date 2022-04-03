@@ -5,6 +5,7 @@
 #include <google/protobuf/message.h>
 #include <iostream>
 #include <fstream>
+#include "logger.h"
 
 namespace JayRPC
 {

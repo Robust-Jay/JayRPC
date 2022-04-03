@@ -3,6 +3,7 @@
 #include "friend.pb.h"
 #include "jayrpcapplication.h"
 #include "jayrpcprovider.h"
+#include "logger.h"
 #include <vector>
 
 using namespace JayRPC;
@@ -12,7 +13,7 @@ class FriendService : public fixbug::FriendServiceRpc
 public:
     std::vector<std::string> GetFriendList(uint32_t userid)
     {
-        std::cout << "do GetFriendList service! userid: " << userid << std::endl;
+        LOG_INFO("do GetFriendList service! userid: %d", userid);
         std::vector<std::string> vec;
         vec.emplace_back("gao yang");
         vec.emplace_back("liu hong");
@@ -40,6 +41,8 @@ public:
 
 int main(int argc, char *argv[])
 {
+    LOG_INFO("first log message!");
+    LOG_ERROR("%s:%s:%d", __FILE__, __FUNCTION__, __LINE__);
     JayRpcApplication::Init(argc, argv);
     JayRpcProvider provider;
     provider.NotifyService(new FriendService());
